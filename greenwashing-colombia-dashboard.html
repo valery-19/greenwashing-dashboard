@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Greenwashing en Colombia — Panel Regulatorio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0C1116; --panel:#131A22; --panel-2:#182029; --line:#26313B;
+  --ink:#EDEFF2; --ink-dim:#8B96A1;
+  --gold:#C9A227; --gold-bg:#2A2515; --blue:#3E6FA6; --blue-bg:#182430;
+  --verificable:#2F8F6B; --verificable-bg:#132621;
+  --parcial:#C9A227; --parcial-bg:#2A2515;
+  --enganoso:#B4402E; --enganoso-bg:#2B1A16;
+  font-family:'Montserrat',sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);min-height:100%;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:36px 24px 60px}
+header{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:28px}
+.tag{display:inline-block;font-size:11.5px;letter-spacing:.04em;color:var(--gold);background:var(--gold-bg);border:1px solid #47401f;padding:4px 10px;border-radius:3px;margin-bottom:10px}
+h1{font-size:clamp(26px,3.4vw,36px);font-weight:800;margin:0 0 6px;line-height:1.1}
+.sub{color:var(--ink-dim);font-size:14.5px;max-width:560px;line-height:1.5;margin:0}
+.meta{text-align:right;color:var(--ink-dim);font-size:12.5px;line-height:1.6}
+.meta b{color:var(--ink);font-weight:600}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
+.kpi .n{font-size:29px;font-weight:800;line-height:1}
+.kpi .l{color:var(--ink-dim);font-size:12px;margin-top:6px;line-height:1.4}
+.kpi.g .n{color:var(--gold)} .kpi.b .n{color:var(--blue)} .kpi.v .n{color:var(--verificable)}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px;margin-bottom:20px}
+.panel h2{font-size:15px;margin:0 0 4px;font-weight:700}
+.panel p.desc{color:var(--ink-dim);font-size:12.5px;margin:0 0 16px}
+
+.date-filter{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-dim)}
+.date-filter select{background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:6px 10px;font-family:inherit;font-size:12.5px}
+.date-filter .legend{display:flex;gap:14px;margin-left:auto;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+
+.tl-row{margin-bottom:12px}
+.tl-row .top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;gap:8px}
+.tl-row .top .name{font-weight:600}
+.tl-row .top .year{color:var(--ink-dim)}
+.tl-track{height:9px;background:var(--panel-2);border-radius:5px;overflow:hidden}
+.tl-fill{height:100%;border-radius:5px}
+.tl-fill.reg{background:var(--blue)} .tl-fill.v{background:var(--verificable)} .tl-fill.p{background:var(--parcial)} .tl-fill.e{background:var(--enganoso)}
+
+.grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:20px}
+@media (max-width:880px){.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.date-filter .legend{margin-left:0}}
+
+.res-row{display:flex;align-items:center;gap:10px;font-size:12.5px;margin-bottom:10px;color:var(--ink-dim)}
+.res-row .lab{width:150px;flex-shrink:0;color:var(--ink)}
+.res-track{flex:1;height:8px;background:var(--panel-2);border-radius:4px;overflow:hidden}
+.res-fill{height:100%;background:var(--blue);border-radius:4px}
+.res-count{width:18px;text-align:right;color:var(--ink)}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.pill{border:1px solid var(--line);background:var(--panel-2);color:var(--ink-dim);font-family:inherit;font-size:12px;padding:6px 12px;border-radius:20px;cursor:pointer}
+.pill.active{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600}
+
+.files{display:flex;flex-direction:column;gap:12px;max-height:560px;overflow-y:auto;padding-right:4px}
+.file{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:15px 17px}
+.file .frow{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.file h3{margin:0;font-size:15px;font-weight:700}
+.file .prod{color:var(--ink-dim);font-size:11.5px;margin-top:2px}
+.file .resource{font-size:12.5px;color:var(--ink-dim);margin:9px 0 0;line-height:1.5}
+.file .src{font-size:11px;color:var(--ink-dim);font-style:italic;margin-top:6px}
+.stamp{font-size:10px;font-weight:800;letter-spacing:.05em;padding:4px 9px;border-radius:4px;border:1.5px solid;white-space:nowrap}
+.stamp.v{color:var(--verificable);border-color:var(--verificable);background:var(--verificable-bg)}
+.stamp.p{color:var(--parcial);border-color:var(--parcial);background:var(--parcial-bg)}
+.stamp.e{color:var(--enganoso);border-color:var(--enganoso);background:var(--enganoso-bg)}
+.sector-tag{font-size:11px;color:var(--ink-dim);margin-top:8px;display:inline-block}
+
+footer{margin-top:10px;color:var(--ink-dim);font-size:11px;line-height:1.6;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <span class="tag">PANEL REGULATORIO · COLOMBIA</span>
+      <h1>Greenwashing en Colombia</h1>
+      <p class="sub">Marco normativo, campañas oficiales y casos de comunicación visual "verde" documentados en el país, 2011–2025.</p>
+    </div>
+    <div class="meta">Diseño Gráfico &amp; Administración Deportiva<br><b>CUN</b> · Ampliación con datos nacionales</div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n" id="kTotal">0</div><div class="l">Casos analizados (globales + Colombia)</div></div>
+    <div class="kpi v"><div class="n" id="kVer">0</div><div class="l">Con evidencia verificable</div></div>
+    <div class="kpi g"><div class="n">57.6%</div><div class="l">de consumidores colombianos valora la responsabilidad ambiental de un producto (NielsenIQ, 2024)</div></div>
+    <div class="kpi b"><div class="n">2.000</div><div class="l">SMMLV: multa máxima aplicable bajo el Estatuto del Consumidor (Ley 1480/2011)</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>Línea de tiempo — regulación y casos en Colombia</h2>
+    <p class="desc">Barras horizontales posicionadas por año, desde la promulgación del Estatuto del Consumidor hasta hoy</p>
+    <div class="date-filter">
+      <label>Desde <select id="fFrom"></select></label>
+      <label>Hasta <select id="fTo"></select></label>
+      <div class="legend">
+        <span><i style="background:var(--blue)"></i>Hito regulatorio</span>
+        <span><i style="background:var(--verificable)"></i>Verificable</span>
+        <span><i style="background:var(--parcial)"></i>Parcial</span>
+        <span><i style="background:var(--enganoso)"></i>Engañoso</span>
+      </div>
+    </div>
+    <div id="timeline"></div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>Recursos visuales "verdes" identificados</h2>
+      <p class="desc">Frecuencia sobre las piezas observadas dentro del rango de fechas</p>
+      <div id="resChart"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Casos documentados</h2>
+      <p class="desc">Filtra por sector o veredicto — respeta el rango de fechas seleccionado</p>
+      <div class="filters" id="fSector"></div>
+      <div class="filters" id="fEstado"></div>
+      <div class="files" id="fileList"></div>
+    </div>
+  </div>
+
+  <footer>
+    Fuentes: Ficha de análisis visual (curso Fundamentos Metodológicos, CUN) · Ley 1480 de 2011 y Decreto 1369 de 2014 · Proyecto de Ley 101 de 2023 y 173/2024–490/2025 (Congreso de la República) · Superintendencia de Industria y Comercio, campaña ICPEN #GreenwashingAlert (marzo 2025) · La República, "Una empresa que practique greenwashing puede pagar hasta 2.000 SMMLV" (2024) y datos NielsenIQ · Tesis "El Greenwashing como estrategia de marketing en Colombia", Universidad de América (2024) · "Greenwashing, poder excepcional", Uniasturias (caso Ecopetrol).
+  </footer>
+</div>
+
+<script>
+const REG = [
+  {name:"Ley 1480 de 2011", detail:"Estatuto del Consumidor: prohíbe la publicidad engañosa", year:2011},
+  {name:"Decreto 1369 de 2014", detail:"Publicidad ambiental: exige atributos verificables", year:2014},
+  {name:"Proyecto de Ley 101 de 2023", detail:"Radicado en el Senado para regular y sancionar el greenwashing", year:2023},
+  {name:"Proyecto de Ley 173/2024", detail:"Reforma al Estatuto del Consumidor frente al comercio digital", year:2024},
+  {name:"Campaña SIC–ICPEN", detail:"#GreenwashingAlert, Mes de Prevención del Fraude", year:2025},
+  {name:"Proyecto de Ley 490/2025", detail:"Trámite en Cámara de Representantes", year:2025},
+];
+
+const DATA = [
+  {name:"Nike", product:"Move to Zero", sector:"Deportivo", status:"v", year:2021,
+   resource:"Símbolo \u2018Sunburst\u2019 sobre fondo verde oliva", note:"Etiqueta con tasa exacta de material reciclado y enlace al reporte de sostenibilidad.", src:"Ficha de análisis visual, CUN", recursos:["verde","reciclaje","cert"]},
+  {name:"Coca-Cola", product:"PlantBottle / Recíclame", sector:"Bebidas", status:"e", year:2022,
+   resource:"Hojas verdes formando flechas de reciclaje, \u201c100% Reciclable\u201d", note:"Solo hasta 30% de material vegetal; tapa y etiqueta no comparten reciclabilidad.", src:"Ficha de análisis visual, CUN", recursos:["verde","natural","reciclaje"]},
+  {name:"Falabella Colombia", product:"\u201cEl Denim es + Verde\u201d", sector:"Moda", status:"p", year:2022,
+   resource:"Campaña de denim \u201cconsciente\u201d con imaginario de naturaleza", note:"Analizada como caso de estudio en tesis sobre greenwashing en marketing de moda en Colombia.", src:"Tesis, Universidad de América (2024)", recursos:["verde","natural"]},
+  {name:"Adidas", product:"Stan Smith \u2018Forever\u2019", sector:"Deportivo", status:"p", year:2023,
+   resource:"Motivos botánicos y texto \u201c100% Sostenible\u201d", note:"Solo parte del corte es reciclada; sin certificación externa visible en la etiqueta.", src:"Ficha de análisis visual, CUN", recursos:["verde","natural","cert"]},
+  {name:"Bimbo", product:"Pan integral Vital", sector:"Alimentos", status:"v", year:2023,
+   resource:"Espigas de trigo y sello \u201c100% biodegradable y compostable\u201d", note:"Referencia a norma técnica de degradación, aclarada en el reverso del empaque.", src:"Ficha de análisis visual, CUN", recursos:["verde","natural","cert"]},
+  {name:"Ecopetrol", product:"Informes de Gestión Sostenible", sector:"Energía", status:"e", year:2020,
+   resource:"Discurso de sostenibilidad corporativa e indicadores ambientales", note:"Estudio académico contrasta el discurso con los derrames reportados entre 2010 y 2020.", src:"\u201cGreenwashing, poder excepcional\u201d, Uniasturias", recursos:["verde","cert"]},
+];
+
+const STATUS_META = {v:{label:"Verificable"},p:{label:"Parcial"},e:{label:"Engañoso"}};
+const RES_META = {verde:"Color verde", natural:"Elementos naturales / hojas", reciclaje:"Símbolo de reciclaje", cert:"Certificación o indicador citado"};
+
+const MIN_Y = 2011, MAX_Y = 2025;
+let filterSector = "Todos", filterEstado = "Todos", fromY = MIN_Y, toY = MAX_Y;
+
+function yearOptions(sel, def){
+  const el = document.getElementById(sel);
+  for(let y=MIN_Y;y<=MAX_Y;y++){ const o=document.createElement('option'); o.value=y; o.textContent=y; if(y===def)o.selected=true; el.appendChild(o); }
+}
+
+function pct(y){ return Math.round(((y - MIN_Y) / (MAX_Y - MIN_Y)) * 100); }
+
+function kpis(){
+  const visible = DATA.filter(d=>d.year>=fromY && d.year<=toY);
+  document.getElementById('kTotal').textContent = visible.length;
+  document.getElementById('kVer').textContent = visible.filter(d=>d.status==='v').length;
+}
+
+function timeline(){
+  const items = [
+    ...REG.filter(r=>r.year>=fromY && r.year<=toY).map(r=>({name:r.name, detail:r.detail, year:r.year, cls:'reg'})),
+    ...DATA.filter(d=>d.year>=fromY && d.year<=toY).map(d=>({name:d.name, detail:d.product, year:d.year, cls:d.status})),
+  ].sort((a,b)=>a.year-b.year);
+  const el = document.getElementById('timeline');
+  el.innerHTML = items.length ? items.map(it=>`
+    <div class="tl-row"><div class="top"><span class="name">${it.name} — <span style="font-weight:400;color:var(--ink-dim)">${it.detail}</span></span><span class="year">${it.year}</span></div>
+    <div class="tl-track"><div class="tl-fill ${it.cls}" style="width:${pct(it.year)}%"></div></div></div>`).join('')
+    : `<p class="desc" style="margin:0">Sin hitos en este rango de fechas.</p>`;
+}
+
+function resChart(){
+  const visible = DATA.filter(d=>d.year>=fromY && d.year<=toY);
+  const counts = {}; Object.keys(RES_META).forEach(k=>counts[k]=0);
+  visible.forEach(d=>d.recursos.forEach(r=>counts[r]++));
+  const max = Math.max(1, ...Object.values(counts));
+  document.getElementById('resChart').innerHTML = Object.keys(RES_META).map(k=>`
+    <div class="res-row"><span class="lab">${RES_META[k]}</span>
+    <div class="res-track"><div class="res-fill" style="width:${(counts[k]/max*100)}%"></div></div>
+    <span class="res-count">${counts[k]}</span></div>`).join('');
+}
+
+function filters(){
+  const sectors = ["Todos", ...new Set(DATA.map(d=>d.sector))];
+  document.getElementById('fSector').innerHTML = sectors.map(s=>
+    `<button class="pill ${s===filterSector?'active':''}" data-sector="${s}">${s}</button>`).join('');
+  document.getElementById('fEstado').innerHTML = ["Todos","v","p","e"].map(s=>
+    `<button class="pill ${s===filterEstado?'active':''}" data-estado="${s}">${s==='Todos'?'Todos':STATUS_META[s].label}</button>`).join('');
+  document.querySelectorAll('[data-sector]').forEach(b=>b.onclick=()=>{filterSector=b.dataset.sector; render();});
+  document.querySelectorAll('[data-estado]').forEach(b=>b.onclick=()=>{filterEstado=b.dataset.estado; render();});
+}
+
+function fileList(){
+  const visible = DATA.filter(d => d.year>=fromY && d.year<=toY &&
+    (filterSector==='Todos'||d.sector===filterSector) && (filterEstado==='Todos'||d.status===filterEstado));
+  document.getElementById('fileList').innerHTML = visible.length ? visible.map(d=>`
+    <div class="file"><div class="frow">
+      <div><h3>${d.name}</h3><div class="prod">${d.product} · ${d.year}</div></div>
+      <span class="stamp ${d.status}">${STATUS_META[d.status].label}</span>
+    </div>
+    <p class="resource"><b style="color:var(--ink)">Recurso visual:</b> ${d.resource}</p>
+    <p class="resource">${d.note}</p>
+    <span class="sector-tag">Sector: ${d.sector}</span><div class="src">Fuente: ${d.src}</div></div>`).join('')
+    : `<div class="file" style="text-align:center;color:var(--ink-dim)">Sin resultados para este filtro.</div>`;
+}
+
+function render(){ kpis(); timeline(); resChart(); filters(); fileList(); }
+
+yearOptions('fFrom', MIN_Y); yearOptions('fTo', MAX_Y);
+document.getElementById('fFrom').onchange = e=>{ fromY=+e.target.value; if(fromY>toY)toY=fromY; render(); };
+document.getElementById('fTo').onchange = e=>{ toY=+e.target.value; if(toY<fromY)fromY=toY; render(); };
+render();
+</script>
+</body>
+</html>
